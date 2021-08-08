@@ -6,32 +6,28 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchNews} from './src/store/actions';
 
-const App: () => React$Node = () => {
-  // const news = useSelector((state) => state?.news.newsData.data);
-  const news1 = useSelector(({news: {newsData}}) => newsData.data);
+function App() {
+  const dispatch = useDispatch();
 
-  const oneInfo = news1.map((item) => {
-    return (
-      <View key={item.id}>
-        <Text>
-          {item.name} | {item.author}
-        </Text>
-        <Text>{item.desc}</Text>
-      </View>
-    );
-  });
+  const news = useSelector(({news}) => news.news?.articles);
+  const loading = useSelector(({news}) => news.loading);
+
+  useEffect(() => {
+    dispatch(fetchNews());
+  }, []);
 
   return (
     <View>
       <Text>Siema</Text>
-      {news1 && oneInfo}
+      <View>{news && news.map((item) => <Text>{item.title}</Text>)}</View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({});
 
